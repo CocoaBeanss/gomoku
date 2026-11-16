@@ -78,4 +78,46 @@ for (let i = 0; i < 20; i++) {
   }
 }
 
+// Running out of time hands the win to the other player; undo reopens the game.
+{
+  const g = new Game();
+  playAll(g, [[7, 7], [7, 8]]);
+  assert.ok(g.timeout(BLACK));
+  assert.strictEqual(g.winner, WHITE);
+  assert.strictEqual(g.play(0, 0), false);
+  g.undo();
+  assert.strictEqual(g.over, false);
+  assert.strictEqual(g.timedOut, false);
+}
+
+// Every level takes a win, blocks a four, and finishes games with legal moves.
+for (const level of ['easy', 'medium', 'hard']) {
+  const win = new Game();
+  playAll(win, [[7, 3], [8, 3], [7, 4], [8, 4], [7, 5], [8, 5], [7, 6], [8, 6]]);
+  let m = bestMove(win.board, BLACK, level);
+  assert.ok(m.r === 7 && (m.c === 2 || m.c === 7), `${level} misses a win`);
+
+  const block = new Game();
+  playAll(block, [[7, 3], [0, 0], [7, 4], [0, 14], [7, 5], [14, 0], [7, 6]]);
+  m = bestMove(block.board, WHITE, level);
+  assert.ok(m.r === 7 && (m.c === 2 || m.c === 7), `${level} misses a block`);
+
+  for (let i = 0; i < 3; i++) {
+    const g = new Game();
+    while (!g.over) {
+      m = bestMove(g.board, g.turn, level);
+      assert.ok(m && g.play(m.r, m.c));
+    }
+  }
+}
+
+// Hard sees a double threat coming: black has an open three and can make a
+// second one, so white must not ignore it.
+{
+  const g = new Game();
+  playAll(g, [[7, 7], [0, 0], [7, 8], [0, 14], [7, 9]]);
+  const m = bestMove(g.board, WHITE, 'hard');
+  assert.ok(m.r === 7 && (m.c === 6 || m.c === 10 || m.c === 5 || m.c === 11), 'hard ignores an open three');
+}
+
 console.log('All tests passed.');

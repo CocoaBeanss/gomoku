@@ -13,30 +13,95 @@
       <p class="rule">Five in a row wins.</p>
     </header>
 
-    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <div class="layout">
+      <div class="play">
+        <div class="players">
+          <div class="player" id="player-1">
+            <span class="dot black"></span>
+            <span class="pname"></span>
+            <span class="clock"></span>
+          </div>
+          <div class="player" id="player-2">
+            <span class="dot white"></span>
+            <span class="pname"></span>
+            <span class="clock"></span>
+          </div>
+        </div>
 
-    <div class="board-wrap">
-      <canvas id="board" tabindex="0" aria-label="Gomoku board, 15 by 15. Use arrow keys to move and Enter to place a stone."></canvas>
-    </div>
+        <div class="status" id="status" role="status" aria-live="polite"></div>
 
-    <div class="controls">
-      <label>
-        <span>Opponent</span>
-        <select id="mode">
-          <option value="ai">Computer</option>
-          <option value="human">Two players</option>
-        </select>
-      </label>
-      <label id="side-label">
-        <span>You play</span>
-        <select id="side">
-          <option value="1">Black (first)</option>
-          <option value="2">White</option>
-        </select>
-      </label>
-      <div class="buttons">
-        <button id="undo" type="button">Undo</button>
-        <button id="new" type="button" class="primary">New game</button>
+        <div class="board-wrap">
+          <canvas id="board" tabindex="0" aria-label="Gomoku board, 15 by 15. Use arrow keys to move and Enter to place a stone."></canvas>
+        </div>
+
+        <div class="review" role="group" aria-label="Move review">
+          <button id="rev-first" type="button" aria-label="First move" title="Start">⏮</button>
+          <button id="rev-prev" type="button" aria-label="Previous move" title="Back">◀</button>
+          <span id="rev-pos" class="rev-pos"></span>
+          <button id="rev-next" type="button" aria-label="Next move" title="Forward">▶</button>
+          <button id="rev-last" type="button" aria-label="Latest move" title="Latest">⏭</button>
+        </div>
+      </div>
+
+      <div class="side">
+        <section class="card settings">
+          <label>
+            <span>Opponent</span>
+            <select id="mode">
+              <option value="ai">Computer</option>
+              <option value="human">Two players</option>
+            </select>
+          </label>
+          <label id="level-label">
+            <span>Difficulty</span>
+            <select id="level">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+          <label id="side-label">
+            <span>You play</span>
+            <select id="side">
+              <option value="1">Black (first)</option>
+              <option value="2">White</option>
+            </select>
+          </label>
+          <label>
+            <span>Clock</span>
+            <select id="clock">
+              <option value="0">Off</option>
+              <option value="1">1 min each</option>
+              <option value="3">3 min each</option>
+              <option value="5">5 min each</option>
+              <option value="10">10 min each</option>
+            </select>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="numbers">
+            <span>Show move numbers</span>
+          </label>
+          <div class="buttons">
+            <button id="undo" type="button">Undo</button>
+            <button id="new" type="button" class="primary">New game</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Score</h2>
+            <button id="reset-score" type="button" class="link">Reset</button>
+          </div>
+          <dl class="tally" id="tally"></dl>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Moves</h2>
+          </div>
+          <ol class="moves" id="moves"></ol>
+          <p class="empty" id="moves-empty">No moves yet.</p>
+        </section>
       </div>
     </div>
   </main>

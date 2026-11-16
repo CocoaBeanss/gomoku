@@ -6,6 +6,8 @@
   --border: #d9d1c4;
   --accent: #8a4b1f;
   --accent-text: #fff;
+  --accent-soft: #f1e2d2;
+  --danger: #c0392b;
   --focus: #2f6fdb;
 }
 
@@ -18,6 +20,8 @@
     --border: #3d3832;
     --accent: #d99a5b;
     --accent-text: #1b1917;
+    --accent-soft: #3a2f24;
+    --danger: #ff7a66;
     --focus: #7fb0ff;
   }
 }
@@ -32,13 +36,12 @@ body {
   background: var(--bg);
   color: var(--text);
   font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  display: flex;
-  justify-content: center;
 }
 
 main {
   width: 100%;
   max-width: 600px;
+  margin: 0 auto;
   padding: 20px 16px 32px;
   display: flex;
   flex-direction: column;
@@ -58,25 +61,54 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+h2 {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
 .rule {
   margin: 0;
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.status {
+.layout,
+.play,
+.side {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 8px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-weight: 600;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
 }
 
-.status .dot {
+@media (min-width: 900px) {
+  main {
+    max-width: 960px;
+  }
+
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .play {
+    flex: 1 1 0;
+    max-width: max(360px, calc(100vh - 250px));
+  }
+
+  .side {
+    flex: 0 0 300px;
+  }
+}
+
+/* ---------- players, status ---------- */
+
+.dot {
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -84,13 +116,59 @@ h1 {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
-.status .dot.black {
+.dot.black {
   background: radial-gradient(circle at 35% 30%, #666, #111 65%);
 }
 
-.status .dot.white {
+.dot.white {
   background: radial-gradient(circle at 35% 30%, #fff, #cfcfcf 80%);
 }
+
+.players {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 9px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.player.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pname {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clock {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.clock.low {
+  color: var(--danger);
+}
+
+.status {
+  min-height: 24px;
+  font-weight: 600;
+}
+
+/* ---------- board ---------- */
 
 .board-wrap {
   width: 100%;
@@ -113,11 +191,53 @@ h1 {
   outline-offset: -3px;
 }
 
-.controls {
+.review {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.review button {
+  min-width: 44px;
+  padding: 6px 10px;
+}
+
+.rev-pos {
+  min-width: 110px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- side panel ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.settings .check,
+.settings .buttons {
+  grid-column: 1 / -1;
 }
 
 label {
@@ -126,6 +246,22 @@ label {
   gap: 4px;
   font-size: 0.8rem;
   color: var(--muted);
+  min-width: 0;
+}
+
+label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+label.check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
 }
 
 select,
@@ -137,6 +273,10 @@ button {
   border-radius: 8px;
   padding: 9px 12px;
   min-height: 42px;
+}
+
+select {
+  width: 100%;
 }
 
 button {
@@ -155,16 +295,95 @@ button.primary {
   color: var(--accent-text);
 }
 
+button.link {
+  min-height: 0;
+  padding: 2px 6px;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
 select:focus-visible,
-button:focus-visible {
+button:focus-visible,
+input:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
 .buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
-  margin-left: auto;
+}
+
+.tally {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  text-align: center;
+}
+
+.tally dt {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.tally dd {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.moves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+  gap: 4px;
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.moves button {
+  width: 100%;
+  min-height: 32px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  border-color: transparent;
+  background: none;
+}
+
+.moves button:hover {
+  border-color: var(--border);
+}
+
+.moves button[aria-current="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.moves .dot {
+  width: 10px;
+  height: 10px;
+}
+
+.moves .n {
+  color: var(--muted);
+}
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 [hidden] {
