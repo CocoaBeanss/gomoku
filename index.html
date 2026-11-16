@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gomoku</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Gomoku</h1>
+      <p class="rule">Five in a row wins.</p>
+    </header>
+
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+
+    <div class="board-wrap">
+      <canvas id="board" tabindex="0" aria-label="Gomoku board, 15 by 15. Use arrow keys to move and Enter to place a stone."></canvas>
+    </div>
+
+    <div class="controls">
+      <label>
+        <span>Opponent</span>
+        <select id="mode">
+          <option value="ai">Computer</option>
+          <option value="human">Two players</option>
+        </select>
+      </label>
+      <label id="side-label">
+        <span>You play</span>
+        <select id="side">
+          <option value="1">Black (first)</option>
+          <option value="2">White</option>
+        </select>
+      </label>
+      <div class="buttons">
+        <button id="undo" type="button">Undo</button>
+        <button id="new" type="button" class="primary">New game</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="gomoku.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
